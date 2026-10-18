@@ -1,36 +1,32 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Nest & Grain
 
-## Getting Started
+Storefront for Nest & Grain, a furniture and home decor brand from Pune.
 
-First, run the development server:
+> This is a demo store. No real orders, payments or deliveries are processed.
+
+Built with Next.js 16 (App Router, Cache Components), React 19 and Tailwind CSS 4.
+
+## Develop
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## How it's put together
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Path | What's there |
+|---|---|
+| `src/data/catalog.ts` | Rooms and products, exported from the inventory sheet |
+| `src/app/rooms/[slug]` | Room listings with sort and in-stock filter |
+| `src/app/products/[slug]` | Product pages, statically generated |
+| `src/app/search` | Search |
+| `src/app/cart`, `src/app/checkout` | Cart and checkout, server-rendered |
+| `src/app/actions.ts` | Server actions: add to cart, update, remove, place order |
+| `src/lib/cart.ts` | Cart stored in an httpOnly cookie |
 
-## Learn More
+Payments are collected after order confirmation through a payment link (not wired up in this demo).
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Deployed on Vercel. Product photos from [Unsplash](https://unsplash.com).
