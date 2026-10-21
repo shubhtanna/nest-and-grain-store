@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Suspense } from 'react'
 import { removeLine, updateQty } from '@/app/actions'
-import { cartSummary } from '@/lib/cart'
+import { cartSummary, cartToItemsParam } from '@/lib/cart'
 import { FREE_DELIVERY_FROM, formatPrice } from '@/lib/store'
 
 export const metadata: Metadata = { title: 'Your cart' }
@@ -81,7 +81,7 @@ async function CartContents() {
           <div className="flex justify-between border-t border-rule pt-3 text-base font-medium"><dt>Total</dt><dd>{formatPrice(cart.total)}</dd></div>
         </dl>
         {toFree > 0 && <p className="mt-3 text-xs text-stone">Add {formatPrice(toFree)} more for free delivery and installation.</p>}
-        <Link href="/checkout" className="mt-6 block rounded-full bg-bark py-4 text-center text-sm font-medium text-white">
+        <Link href={`/checkout?items=${cartToItemsParam(cart.items)}`} className="mt-6 block rounded-full bg-bark py-4 text-center text-sm font-medium text-white">
           Continue to checkout
         </Link>
       </aside>

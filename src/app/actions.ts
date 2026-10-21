@@ -3,7 +3,7 @@
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { refresh } from 'next/cache'
-import { readCart, writeCart, cartSummary } from '@/lib/cart'
+import { readCart, writeCart, cartSummary, summaryForLines, itemsParamToCart } from '@/lib/cart'
 import { getProductById } from '@/lib/store'
 
 export async function addToCart(formData: FormData) {
@@ -61,7 +61,10 @@ export async function placeOrder(_prev: CheckoutState, formData: FormData): Prom
   if (!/^\d{6}$/.test(f.pincode)) errors.pincode = 'Please enter a 6-digit PIN code'
   if (Object.keys(errors).length) return { errors }
 
-  const cart = await cartSummary()
+  // A shareable checkout link (?items=…) carries the order in the URL; rebuild it
+  // from there (validated against the catalogue) instead of the cookie cart.
+  const itemsParam = String(formData.get('items') ?? '')
+  const cart = itemsParam ? summaryForLines(itemsParamToCart(itemsParam)) : await cartSummary()
   if (cart.count === 0) return { message: 'Your cart is empty.' }
 
   const orderId = `NG-${Date.now().toString(36).toUpperCase()}`
