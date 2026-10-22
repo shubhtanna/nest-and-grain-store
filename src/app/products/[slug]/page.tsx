@@ -7,6 +7,7 @@ import AddToCart from '@/components/AddToCart'
 import PincodeCheck from '@/components/PincodeCheck'
 import ProductCard from '@/components/ProductCard'
 import { STOCK_LABEL, formatPrice, getAllProducts, getProduct, getProductsInRoom, getRoom } from '@/lib/store'
+import { getBaseUrl } from '@/lib/site'
 
 export function generateStaticParams() {
   return getAllProducts().map((p) => ({ slug: p.slug }))
@@ -27,9 +28,28 @@ export default async function ProductPage({ params }: PageProps<'/products/[slug
   if (!p) notFound()
   const room = getRoom(p.room)!
   const related = getProductsInRoom(p.room).filter((x) => x.id !== p.id).slice(0, 4)
+  const productUrl = `/products/${p.slug}`
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: p.name,
+    description: p.description,
+    image: [`${p.image}?w=1200&q=75&auto=format&fit=crop`],
+    sku: p.id,
+    url: productUrl,
+    offers: {
+      '@type': 'Offer',
+      price: p.price,
+      priceCurrency: 'INR',
+      availability: p.stock === 'out_of_stock' ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock',
+      url: productUrl,
+    },
+  }
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+
       <nav className="mb-6 flex items-center gap-1 text-xs text-stone">
         <Link href="/">Home</Link>
         <ChevronRight size={12} />

@@ -5,7 +5,7 @@ import { placeOrder, type CheckoutState } from '@/app/actions'
 
 const SLOTS = ['Weekday morning (9–1)', 'Weekday afternoon (1–6)', 'Saturday', 'Sunday']
 
-export default function CheckoutForm({ total }: { total: string }) {
+export default function CheckoutForm({ total, itemsParam }: { total: string; itemsParam: string | null }) {
   const [state, action, pending] = useActionState<CheckoutState, FormData>(placeOrder, {})
   const err = state.errors ?? {}
 
@@ -23,6 +23,7 @@ export default function CheckoutForm({ total }: { total: string }) {
 
   return (
     <form action={action} className="space-y-8">
+      {itemsParam && <input type="hidden" name="items" value={itemsParam} />}
       <section>
         <h2 className="font-serif text-xl">Contact</h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
